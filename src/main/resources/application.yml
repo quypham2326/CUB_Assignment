@@ -1,4 +1,9 @@
 spring:
+  messages:
+    basename: messages
+    encoding: UTF-8
+    cache-duration: PT1H
+    fallback-to-system-locale: false
   jackson:
     property-naming-strategy: SNAKE_CASE
   management:
@@ -12,7 +17,7 @@ spring:
 
   datasource:
     username: sa
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;TIME ZONE=UTC
     driverClassName: org.h2.Driver
     password:
 
@@ -44,8 +49,34 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
+    cathay.united.bank: DEBUG
+    feign: DEBUG
+    org.hibernate.SQL: INFO
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: BASIC
+        connectTimeout: 5000
+        readTimeout: 10000
 
 server:
   port: 8080
+
+# Swagger Configuration
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  packages-to-scan: cathay.united.bank.controller
+
+api:
+  exchange-rates: https://fxds-public-exchange-rates-api.oanda.com/cc-api/currencies
+cron:
+  time: 59 59 23 * * *
+  area: Asia/Ho_Chi_Minh
